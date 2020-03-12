@@ -13,25 +13,24 @@
 
     for (NSArray *charSetArray in charSetArrays) {
         
-        NSError *error = nil;
+        NSMutableArray *charPositions = [NSMutableArray new];
         
-        NSMutableArray *firstCharPositions = [NSMutableArray new];
-        NSString *pattern = [NSString stringWithFormat:@"\\%@", charSetArray[0]];
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
-        NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, string.length)];
-        
-        for (NSTextCheckingResult *match in matches) {
-            [firstCharPositions addObject: [NSNumber numberWithUnsignedInteger:match.range.location]];
+        for (int k = 0; k < 2; k++) {
+            NSMutableArray *currentCharPositions = [NSMutableArray new];
+            NSError *error = nil;
+            NSString *pattern = [NSString stringWithFormat:@"\\%@", charSetArray[k]];
+            NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
+            NSArray<NSTextCheckingResult *> *matches = [regex matchesInString:string options:0 range:NSMakeRange(0, string.length)];
+            
+            for (NSTextCheckingResult *match in matches) {
+                [currentCharPositions addObject: [NSNumber numberWithUnsignedInteger:match.range.location]];
+            }
+            
+            [charPositions addObject:currentCharPositions];
         }
         
-        NSMutableArray *secondCharPositions = [NSMutableArray new];
-        pattern = [NSString stringWithFormat:@"\\%@", charSetArray[1]];
-        regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:&error];
-        matches = [regex matchesInString:string options:0 range:NSMakeRange(0, string.length)];
-        
-        for (NSTextCheckingResult *match in matches) {
-            [secondCharPositions addObject: [NSNumber numberWithUnsignedInteger:match.range.location]];
-        }
+        NSArray *firstCharPositions = (NSArray *)charPositions[0];
+        NSArray *secondCharPositions = (NSArray *)charPositions[1];
         
         for (int i = 0; i < firstCharPositions.count; i++) {
             NSUInteger firstIndex = ((NSNumber *)(firstCharPositions[i])).unsignedIntegerValue;
