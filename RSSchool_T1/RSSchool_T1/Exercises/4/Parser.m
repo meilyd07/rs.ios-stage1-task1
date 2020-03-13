@@ -40,10 +40,8 @@
                 
                 if (firstIndex < secondIndex) {
                     NSString *tempString = [string substringWithRange:NSMakeRange(firstIndex + 1, secondIndex - firstIndex - 1)];
-                    if ([tempString containsString:charSetArray[0]] && ![tempString containsString:charSetArray[1]]) {
-                        continue;
-                    } else {
-                        
+                    
+                    if (![tempString containsString:charSetArray[0]] || [tempString containsString:charSetArray[1]]) {
                         NSArray *pair = @[
                             firstCharPositions[i],
                             tempString];
@@ -51,8 +49,6 @@
                         [arrayOfPairs addObject:pair];
                         break;
                     }
-                } else {
-                    continue;
                 }
             }
         }
